@@ -1,0 +1,31 @@
+#Framingham heart study
+
+str(framingham)
+
+library(caTools)
+
+#Create training and test sets
+set.seed(1000)
+split = sample.split(framingham$TenYearCHD, SplitRatio = .65)
+train = subset(framingham, split == TRUE)
+test = subset(framingham, split == FALSE)
+
+#Build logistic regression model
+framinghamLog = glm(TenYearCHD ~ ., data = train, family = binomial)
+summary(framinghamLog)
+
+#Predictions on test set
+predictTest = predict(framinghamLog, type = "response", newdata = test)
+
+#Confusion matrix /w threshold of .5
+ConfMat <- table(test$TenYearCHD, predictTest >.5)
+ConfMat
+
+#Function for diagnostics
+diag <- function(ConfMat, print=TRUE){
+  sensitivity = ConfMat[2,2]/(ConfMat[1,2]+ConfMat[2,2])
+  specificity =
+  accuracy = (ConfMat[1, 1] + ConfMat[2, 2])/(ConfMat[1, 1] + ConfMat[1, 2] + ConfMat[2,1] + ConfMat[2, 2])
+  print(x)
+}
+diag(ConfMat)
